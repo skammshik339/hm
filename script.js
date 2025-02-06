@@ -2,6 +2,7 @@ import postDataFunction from "./modulePost.js"
 import getDataFunction from "./moduleGet.js"
 import deleteDataFunction from "./maduleDelete.js"
 import patchDataFunction from "./modulePatch.js"
+import shuffleArray from "./moduleRandom.js"
 let buttonGet = document.querySelector('.buttonGet')
 let buttonSort = document.querySelector('.buttonSort')
 let buttonPost = document.querySelector('.buttonPost')
@@ -33,6 +34,24 @@ buttonGet.addEventListener('click', async () => {
 
 })
 
+buttonRandom.addEventListener('click', async () => {
+  list.innerHTML = ''
+  let images = await getDataFunction('http://localhost:3000/IMAGES')
+  images = shuffleArray(images)
+
+  images.forEach(image => {
+    list.insertAdjacentHTML(
+      `beforeend`,
+      `<li id = "${image.id}"><p>${image.name}</p><img src = "${image.url}"></li>`
+
+    )
+  })
+
+
+
+})
+
+
 list.addEventListener('click', function () {
   let li = document.querySelector('li')
   li.addEventListener('click', async () => {
@@ -47,4 +66,28 @@ list.addEventListener('click', function () {
       })
     }
   })
+})
+
+buttonSort.addEventListener('click', async () => {
+  list.innerHTML = ''
+  let images = await getDataFunction('http://localhost:3000/IMAGES')
+
+  const sorted = images.sort((a, b) => {
+    if (a.name.toLowerCase() < b.name.toLowerCase()) {
+      return -1;
+    }
+    if (a.name.toLowerCase() > b.name.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+
+  images.forEach(image => {
+    list.insertAdjacentHTML(
+      `beforeend`,
+      `<li id = "${image.id}"><p>${image.name}</p><img src = "${image.url}"></li>`
+
+    )
+  })
+
 })
